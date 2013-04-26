@@ -6,10 +6,8 @@ using namespace std;
 
 namespace ccg {
 
-Word::Word(const string& data, int type) {
-  data_ = data;
-  type_ = type;
-}
+Word::Word(const string& data, int type) :
+    data_(data), type_(type) {}
 
 string Word::data() {
   return data_;

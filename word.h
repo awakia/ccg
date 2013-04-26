@@ -12,8 +12,8 @@ class Word {
   int type();
 
  private:
-  std::string data_;
-  int type_;
+  const std::string data_;
+  const int type_;
 };
 
 }
