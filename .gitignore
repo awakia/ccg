@@ -1,0 +1,22 @@
+# Commonly unnecessary files
+doc/
+*.swp
+*.out
+*~
+\#*
+.project
+.DS_Store
+
+# C++ Compiled Object files
+*.slo
+*.lo
+*.o
+
+# C++ Compiled Dynamic libraries
+*.so
+*.dylib
+
+# C++ Compiled Static libraries
+*.lai
+*.la
+*.a
