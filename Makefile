@@ -20,12 +20,14 @@ RM              = rm -f
 ### Files ##FIXME##
 ###
 
-TARGET          = main
+BINDIR          = bin
+TARGETFILE      = main
+TARGET          = $(BINDIR)/$(TARGETFILE)
 SRCS            = main.cc word.cc
 OBJS            = $(SRCS:.cc=.o)
-EXES            = $(TARGET/$/.exe)
+
 MAKEFILE        = Makefile
-DOCS            = README
+DOCS            = README.md
 
 ###
 ### Targets
@@ -35,6 +37,7 @@ DOCS            = README
 all: target
 target: $(TARGET)
 $(TARGET): $(OBJS)
+	mkdir -p $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 ###
@@ -58,9 +61,11 @@ main.o: main.cc
 ### clean
 ###
 
-.PHONY: clean
-clean:
+.PHONY: clean cleanobj cleanbin
+clean: cleanobj cleanbin
+
+cleanobj:
 	$(RM) $(OBJS)
 
-realclean: clean
-	$(RM) core a.out *~
+cleanbin:
+	$(RM) -r $(BINDIR)

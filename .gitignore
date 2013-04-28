@@ -7,6 +7,9 @@ doc/
 .project
 .DS_Store
 
+# C++ Executable files
+bin/
+
 # C++ Compiled Object files
 *.slo
 *.lo
