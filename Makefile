@@ -14,31 +14,54 @@ CXXFLAGS        = $(WARNINGS) $(DEBUG) $(DEFS) $(OPTS) $(INCLUDES)
 LDFLAGS         = #-L.
 LIBS            = #-l.
 
+TEST_LIBS       = -lgtest
+
 RM              = rm -f
 
 ###
-### Files ##FIXME##
+### Files
 ###
-
-BINDIR          = bin
-TARGETFILE      = main
-TARGET          = $(BINDIR)/$(TARGETFILE)
-SRCS            = main.cc word.cc
-OBJS            = $(SRCS:.cc=.o)
 
 MAKEFILE        = Makefile
 DOCS            = README.md
+BINDIR          = bin/
+
+### VPATH
+
+VPATH           = $(BINDIR)
+
+### C++ Classes
+
+CLASSES         = word  # ADD HERE
+
+###
+### Functions
+###
+
+define DECLARE
+
+$(1:=_test): $(1:=_test.o) $(1:=.o)
+	$(CXX) $(LDFLAGS) -o $(BINDIR)$(1:=_test) $(1:=_test.o) $(1:=.o) $(LIBS) $(TEST_LIBS)
+$(1:=_test.o): $(1:=_test.cc) $(1:=.h)
+$(1:=.o): $(1:=.cc) $(1:=.h)
+
+endef
+
 
 ###
 ### Targets
 ###
 
 .PHONY: all
-all: target
-target: $(TARGET)
-$(TARGET): $(OBJS)
+all: prepare $(CLASSES:=_test) main
+
+prepare:
 	mkdir -p $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
+
+$(foreach i,$(CLASSES),$(eval $(call DECLARE,$(i))))
+
+main: main.o $(CLASSES:=.o)
+	$(CXX) $(LDFLAGS) -o $(BINDIR)$@ $^ $(LIBS)
 
 ###
 ### Suffix Rules
@@ -50,22 +73,13 @@ $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 ###
-### Dependencies ##FIXME##
-###
-
-## write only ".o" dependencies for simplicity... ##
-word.o: word.cc word.h
-main.o: main.cc
-
-###
 ### clean
 ###
 
-.PHONY: clean cleanobj cleanbin
-clean: cleanobj cleanbin
+.PHONY: clean realclean
 
-cleanobj:
-	$(RM) $(OBJS)
+clean:
+	$(RM) *.o *.gch *~
 
-cleanbin:
+realclean: clean
 	$(RM) -r $(BINDIR)
