@@ -9,10 +9,10 @@ WARNINGS        = #-Wall
 DEBUG           = #-g -DDEBUG
 DEFS            = #-DTIMESEED
 OPTS            = #-O2
-INCLUDES        = #-I/usr/include/boost-1_33_1
+INCLUDES        = `mecab-config --cflags` #-I/usr/include/boost-1_33_1
 CXXFLAGS        = $(WARNINGS) $(DEBUG) $(DEFS) $(OPTS) $(INCLUDES)
 LDFLAGS         = #-L.
-LIBS            = #-l.
+LIBS            = `mecab-config --libs` #-l.
 
 TEST_LIBS       = -lgtest
 
@@ -32,7 +32,8 @@ VPATH           = $(BINDIR)
 
 ### C++ Classes
 
-CLASSES         = word  # ADD HERE
+CLASSES         = word parser  # ADD HERE
+parser_deps     = word
 
 ###
 ### Functions
@@ -40,10 +41,10 @@ CLASSES         = word  # ADD HERE
 
 define DECLARE
 
-$(1:=_test): $(1:=_test.o) $(1:=.o)
-	$(CXX) $(LDFLAGS) -o $(BINDIR)$(1:=_test) $(1:=_test.o) $(1:=.o) $(LIBS) $(TEST_LIBS)
+$(1:=_test): $(1:=_test.o) $(1:=.o) $($(1:=_deps):=.o)
+	$(CXX) $(LDFLAGS) -o $(BINDIR)$(1:=_test) $(1:=_test.o) $(1:=.o) $($(1:=_deps):=.o) $(LIBS) $(TEST_LIBS)
 $(1:=_test.o): $(1:=_test.cc) $(1:=.h)
-$(1:=.o): $(1:=.cc) $(1:=.h)
+$(1:=.o): $(1:=.cc) $(1:=.h) $($(1:=_deps):=.cc) $($(1:=_deps):=.h)
 
 endef
 
