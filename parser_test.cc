@@ -24,6 +24,18 @@ TEST_F(ParserTest, ParseJapanese) {
   EXPECT_EQ(expect, output);
 }
 
+TEST_F(ParserTest, ParseJapanese2) {
+  const string input = "象は鼻が長い。";
+  const string expect = "[[BOS]] 象 は 鼻 が 長い 。 [[EOS]]";
+  vector<Word> words = parser_.parse(input);
+  string output = "";
+  for (int i = 0; i < words.size(); i++) {
+    if (i) output += " ";
+    output += words[i].data();
+  }
+  EXPECT_EQ(expect, output);
+}
+
 }
 
 GTEST_API_ int main(int argc, char **argv) {
